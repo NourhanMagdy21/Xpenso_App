@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xpenso_app/widgets/new_expense.dart';
 
 import '../../models/expense.dart';
 import '../../widgets/expenses_list/expenses_list.dart';
@@ -37,18 +38,33 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('Expenses')),),
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: ExpensesList(expenses: expenses),
-          )
-        ],
+      appBar: AppBar(
+        title: Center(child: Text('Expenses')),
       ),
-    ));
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ExpensesList(expenses: expenses),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+            color: Colors.black, borderRadius: BorderRadius.circular(30)),
+        child: IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context, builder: (c) => NewExpense());
+            },
+            icon: Icon(
+              Icons.add,
+              size: 30,
+              color: Colors.grey.shade300,
+            )),
+      ),
+    );
   }
 }
-
-
