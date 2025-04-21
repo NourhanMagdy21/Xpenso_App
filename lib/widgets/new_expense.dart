@@ -1,11 +1,12 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xpenso_app/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -13,7 +14,7 @@ class NewExpense extends StatefulWidget {
 
 class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
-  final _amoutController = TextEditingController();
+  final _amountController = TextEditingController();
   DateTime? _selectedDate;
   final formatter = DateFormat.yMd();
   Category _selectedCategory = Category.skinCare;
@@ -33,7 +34,7 @@ class _NewExpenseState extends State<NewExpense> {
           TextField(
             controller: _titleController,
             maxLength: 50,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 label: Text(
               'Title',
               style: TextStyle(
@@ -42,16 +43,16 @@ class _NewExpenseState extends State<NewExpense> {
               ),
             )),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             children: [
               Expanded(
                 child: TextField(
-                  controller: _amoutController,
+                  controller: _amountController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       prefixText: '\$',
                       label: Text(
                         'Amout',
@@ -62,7 +63,7 @@ class _NewExpenseState extends State<NewExpense> {
                       )),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Expanded(
@@ -87,20 +88,20 @@ class _NewExpenseState extends State<NewExpense> {
                             _selectedDate = pickedDate;
                           });
                         },
-                        icon: Icon(Icons.calendar_month_sharp)),
+                        icon: const Icon(Icons.calendar_month_sharp)),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DropdownButton(
-                value: _selectedCategory,
+                  value: _selectedCategory,
                   items: Category.values
                       .map(
                         (e) => DropdownMenuItem(
@@ -111,31 +112,60 @@ class _NewExpenseState extends State<NewExpense> {
                       .toList(),
                   onChanged: (newCat) {
                     setState(() {
-                      if(newCat == null) {
+                      if (newCat == null) {
                         return;
                       }
                       _selectedCategory = newCat;
                     });
                   }),
               Spacer(),
-
               ElevatedButton(
                   onPressed: () {
-                    log(_titleController.text);
-                    log(_amoutController.text);
+                    final double? enteredAmount =
+                        double.tryParse(_amountController.text);
+                    final bool amountInvalid =
+                        enteredAmount == null || enteredAmount <= 0;
+                    if (_titleController.text.trim().isEmpty ||
+                        amountInvalid == null ||
+                        _selectedDate == null) {
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                                title: const Text('Invalid input'),
+                                content: const Text(
+                                    'Please make sure valid title, amount, date and category was entered.'),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                      },
+                                      child: const Text(
+                                        'Okay',
+                                        style: TextStyle(color: Colors.black),
+                                      )),
+                                ],
+                              ));
+                    } else {
+                      widget.onAddExpense(Expense(
+                          title: _titleController.text,
+                          amount: enteredAmount!,
+                          category: _selectedCategory,
+                          date: _selectedDate!));
+                      Navigator.pop(context);
+                    }
                   },
-                  child: Text(
+                  child: const Text(
                     'Save expense',
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   )),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text(
+                  child: const Text(
                     'Cancel',
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   )),
