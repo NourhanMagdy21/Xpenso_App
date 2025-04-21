@@ -13,26 +13,26 @@ class ExpensesScreen extends StatefulWidget {
 
 class _ExpensesScreenState extends State<ExpensesScreen> {
   final List<Expense> _registeredExpenses = [
-    Expense(
-        title: 'SkinCare',
-        amount: 200,
-        category: Category.skinCare,
-        date: DateTime.now()),
-    Expense(
-        title: 'Pasta',
-        amount: 150,
-        category: Category.food,
-        date: DateTime.now()),
-    Expense(
-        title: 'USA',
-        amount: 1500,
-        category: Category.travel,
-        date: DateTime.now()),
-    Expense(
-        title: 'Work',
-        amount: 800,
-        category: Category.work,
-        date: DateTime.now()),
+    // Expense(
+    //     title: 'SkinCare',
+    //     amount: 200,
+    //     category: Category.skinCare,
+    //     date: DateTime.now()),
+    // Expense(
+    //     title: 'Pasta',
+    //     amount: 150,
+    //     category: Category.food,
+    //     date: DateTime.now()),
+    // Expense(
+    //     title: 'USA',
+    //     amount: 1500,
+    //     category: Category.travel,
+    //     date: DateTime.now()),
+    // Expense(
+    //     title: 'Work',
+    //     amount: 800,
+    //     category: Category.work,
+    //     date: DateTime.now()),
   ];
 void _addExpense (Expense expense){
   setState(() {
